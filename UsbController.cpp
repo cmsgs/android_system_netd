@@ -50,8 +50,13 @@ int UsbController::enableRNDIS(bool enable) {
     int fd = open("/sys/devices/platform/msm_hsusb/usb_function_switch", O_RDWR);
     int count = snprintf(value, sizeof(value), "%d\n", (enable ? 4 : 3));
 #else
-    int fd = open("/sys/class/usb_composite/rndis/enable", O_RDWR);
-    int count = snprintf(value, sizeof(value), "%d\n", (enable ? 1 : 0));
+    #ifdef TARGET_IS_GALAXYS
+        int fd = open("/sys/devices/virtual/sec/switch", O_RDWR);
+        int count = snprintf(value, sizeof(value), "%d\n", (enable ? 1 : 0));
+    #else
+        int fd = open("/sys/class/usb_composite/rndis/enable", O_RDWR);
+        int count = snprintf(value, sizeof(value), "%d\n", (enable ? 1 : 0));
+    #endif
 #endif
     write(fd, value, count);
     close(fd);
@@ -63,7 +68,11 @@ bool UsbController::isRNDISStarted() {
 #ifdef USE_HTC_USB_FUNCTION_SWITCH
     int fd = open("/sys/devices/platform/msm_hsusb/usb_function_switch", O_RDWR);
 #else
-    int fd = open("/sys/class/usb_composite/rndis/enable", O_RDWR);
+    #ifdef TARGET_IS_GALAXYS
+        int fd = open("/sys/devices/virtual/sec/switch", O_RDWR);
+    #else
+        int fd = open("/sys/class/usb_composite/rndis/enable", O_RDWR);
+    #endif
 #endif
     read(fd, &value, 1);
     close(fd);
