@@ -51,7 +51,7 @@ int UsbController::enableRNDIS(bool enable) {
     int count = snprintf(value, sizeof(value), "%d\n", (enable ? 4 : 3));
 #else
     #ifdef TARGET_IS_GALAXYS
-        int fd = open("/sys/devices/virtual/sec/switch", O_RDWR);
+        int fd = open("/sys/devices/virtual/sec/switch/tethering", O_RDWR);
         int count = snprintf(value, sizeof(value), "%d\n", (enable ? 1 : 0));
     #else
         int fd = open("/sys/class/usb_composite/rndis/enable", O_RDWR);
@@ -69,7 +69,7 @@ bool UsbController::isRNDISStarted() {
     int fd = open("/sys/devices/platform/msm_hsusb/usb_function_switch", O_RDWR);
 #else
     #ifdef TARGET_IS_GALAXYS
-        int fd = open("/sys/devices/virtual/sec/switch", O_RDWR);
+        int fd = open("/sys/devices/virtual/sec/switch/tethering", O_RDWR);
     #else
         int fd = open("/sys/class/usb_composite/rndis/enable", O_RDWR);
     #endif
